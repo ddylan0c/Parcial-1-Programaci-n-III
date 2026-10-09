@@ -1,4 +1,3 @@
-# ui/interfaz.py
 from tabulate import tabulate
 
 
@@ -13,6 +12,9 @@ def solicitar_datos_entrada():
     print("=" * 60)
     print("    SISTEMA DE CONSULTA DE VARIABLES EDAFICAS EN COLOMBIA")
     print("=" * 60)
+    print(
+        "\n(Asegúrese de ingresar los datos correctamente, con acentos y sin errores tipográficos.)\n"
+    )
 
     # 1. Solicitar Departamento
     departamento = input("\nIngrese el Departamento: ").strip()
@@ -49,52 +51,92 @@ def solicitar_datos_entrada():
     return departamento, municipio, cultivo, registros
 
 
-def mostrar_resultados(resultado):
-    """Recibe un diccionario con los datos procesados y los muestra en una tabla
+def mostrar_resultados(df_registros, resumen_medianas):
+    """Muestra primero la tabla con los N registros individuales
 
-    por consola utilizando la librería 'tabulate'.
+    y posteriormente la tabla con las medianas de las variables edáficas.
     """
-    print("\n" + "=" * 60)
+    print("\n" + "=" * 70)
     print("                    RESULTADOS DE LA CONSULTA")
-    print("=" * 60)
+    print("=" * 70)
 
-    if not resultado:
+    if df_registros is None or df_registros.empty:
         print(
             "\n No se encontraron registros con los criterios ingresados."
         )
         print("Por favor, verifique el Departamento, Municipio o Cultivo.")
-        print("=" * 60 + "\n")
+        print("=" * 70 + "\n")
         return
 
-    # Definir los encabezados requeridos por la guía
-    headers = [
+    # --- TABLA 1: REGISTROS OBTENIDOS ---
+    print(f"\n REGISTROS CONSULTADOS ({len(df_registros)}):")
+
+    col_topo = (
+        "Topografia" if "Topografia" in df_registros.columns else "Topología"
+    )
+
+    tabla_registros = []
+    for idx, fila in df_registros.reset_index(drop=True).iterrows():
+        tabla_registros.append([
+            idx + 1,
+            fila.get("Departamento", "N/A"),
+            fila.get("Municipio", "N/A"),
+            fila.get("Cultivo", "N/A"),
+            fila.get(col_topo, "N/A"),
+            fila.get("pH agua:suelo 2,5:1,0", "N/A"),
+            fila.get("Fósforo (P) Bray II mg/kg", "N/A"),
+            fila.get("Potasio (K) intercambiable cmol(+)/kg", "N/A"),
+        ])
+
+    headers_registros = [
+        "#",
+        "Departamento",
+        "Municipio",
+        "Cultivo",
+        "Topología",
+        "pH",
+        "Fósforo (P)",
+        "Potasio (K)",
+    ]
+
+    print(
+        tabulate(
+            tabla_registros,
+            headers=headers_registros,
+            tablefmt="fancy_grid",
+            stralign="center",
+        )
+    )
+
+    # --- TABLA 2: MEDIANAS CALCULADAS ---
+    print("\n MEDIANAS CALCULADAS DE LAS VARIABLES EDÁFICAS:")
+
+    tabla_medianas = [[
+        resumen_medianas.get("Departamento"),
+        resumen_medianas.get("Municipio"),
+        resumen_medianas.get("Cultivo"),
+        resumen_medianas.get("Topología"),
+        resumen_medianas.get("Mediana pH"),
+        resumen_medianas.get("Mediana Fósforo (P)"),
+        resumen_medianas.get("Mediana Potasio (K)"),
+    ]]
+
+    headers_medianas = [
         "Departamento",
         "Municipio",
         "Cultivo",
         "Topología",
         "Mediana pH",
-        "Mediana P (Fósforo)",
-        "Mediana K (Potasio)",
+        "Mediana P",
+        "Mediana K",
     ]
 
-    # Convertir el diccionario de resultados en una fila para la tabla
-    tabla_datos = [
-        [
-            resultado.get("Departamento"),
-            resultado.get("Municipio"),
-            resultado.get("Cultivo"),
-            resultado.get("Topología"),
-            resultado.get("Mediana pH"),
-            resultado.get("Mediana Fósforo (P)"),
-            resultado.get("Mediana Potasio (K)"),
-        ]
-    ]
-
-    # Imprimir la tabla formateada
     print(
-        "\n"
-        + tabulate(
-            tabla_datos, headers=headers, tablefmt="fancy_grid", stralign="center"
+        tabulate(
+            tabla_medianas,
+            headers=headers_medianas,
+            tablefmt="fancy_grid",
+            stralign="center",
         )
     )
-    print("=" * 60 + "\n")
+    print("=" * 70 + "\n")
