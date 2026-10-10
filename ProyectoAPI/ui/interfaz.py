@@ -68,12 +68,7 @@ def mostrar_resultados(df_registros, resumen_medianas):
         print("=" * 70 + "\n")
         return
 
-    # --- TABLA 1: REGISTROS OBTENIDOS ---
     print(f"\n REGISTROS CONSULTADOS ({len(df_registros)}):")
-
-    col_topo = (
-        "Topografia" if "Topografia" in df_registros.columns else "Topología"
-    )
 
     tabla_registros = []
     for idx, fila in df_registros.reset_index(drop=True).iterrows():
@@ -82,7 +77,7 @@ def mostrar_resultados(df_registros, resumen_medianas):
             fila.get("Departamento", "N/A"),
             fila.get("Municipio", "N/A"),
             fila.get("Cultivo", "N/A"),
-            fila.get(col_topo, "N/A"),
+            fila.get("Topografia", "N/A"),
             fila.get("pH agua:suelo 2,5:1,0", "N/A"),
             fila.get("Fósforo (P) Bray II mg/kg", "N/A"),
             fila.get("Potasio (K) intercambiable cmol(+)/kg", "N/A"),
@@ -93,7 +88,7 @@ def mostrar_resultados(df_registros, resumen_medianas):
         "Departamento",
         "Municipio",
         "Cultivo",
-        "Topología",
+        "Topografia",
         "pH",
         "Fósforo (P)",
         "Potasio (K)",
@@ -112,20 +107,12 @@ def mostrar_resultados(df_registros, resumen_medianas):
     print("\n MEDIANAS CALCULADAS DE LAS VARIABLES EDÁFICAS:")
 
     tabla_medianas = [[
-        resumen_medianas.get("Departamento"),
-        resumen_medianas.get("Municipio"),
-        resumen_medianas.get("Cultivo"),
-        resumen_medianas.get("Topología"),
         resumen_medianas.get("Mediana pH"),
         resumen_medianas.get("Mediana Fósforo (P)"),
         resumen_medianas.get("Mediana Potasio (K)"),
     ]]
 
     headers_medianas = [
-        "Departamento",
-        "Municipio",
-        "Cultivo",
-        "Topología",
         "Mediana pH",
         "Mediana P",
         "Mediana K",

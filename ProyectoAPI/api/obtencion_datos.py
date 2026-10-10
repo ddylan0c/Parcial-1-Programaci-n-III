@@ -37,14 +37,7 @@ def consultar_variables_edaficas(
         df_filtrado = df_filtrado.head(limite_registros)
 
     # 5. Obtener la topología/topografía (primer valor encontrado)
-    col_topo = (
-        "Topografia" if "Topografia" in df_filtrado.columns else "Topología"
-    )
-    topologia = (
-        df_filtrado[col_topo].iloc[0]
-        if col_topo in df_filtrado.columns
-        else "N/A"
-    )
+
 
     # 6. Calcular la mediana de las variables edáficas (pH, P, K) sobre el grupo de N registros
     val_ph = pd.to_numeric(
@@ -66,7 +59,6 @@ def consultar_variables_edaficas(
         "Departamento": departamento,
         "Municipio": municipio,
         "Cultivo": cultivo,
-        "Topología": topologia,
         "Mediana pH": round(mediana_ph, 2) if pd.notnull(mediana_ph) else "N/A",
         "Mediana Fósforo (P)": round(mediana_p, 2)
         if pd.notnull(mediana_p)
