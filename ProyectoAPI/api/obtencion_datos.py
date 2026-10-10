@@ -1,7 +1,7 @@
 from pathlib import Path
 import pandas as pd
 
-# Definir la ruta del archivo asegurando que lo encuentre desde la raíz
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 RUTA_EXCEL = BASE_DIR / "resultado_laboratorio_suelo.xlsx"
 
@@ -16,10 +16,10 @@ def consultar_variables_edaficas(
     if not RUTA_EXCEL.exists():
         return None, None
 
-    # 1. Cargar el archivo de Excel
+    # Carga excel en dataframe
     df = pd.read_excel(RUTA_EXCEL)
 
-    # 2. Filtrar por departamento, municipio y cultivo (sin importar mayúsculas/minúsculas)
+# compara la info en las columnas con lo ingresado por el usuario
     filtro = (
         (df["Departamento"].astype(str).str.upper() == departamento.upper())
         & (df["Municipio"].astype(str).str.upper() == municipio.upper())
@@ -28,18 +28,16 @@ def consultar_variables_edaficas(
 
     df_filtrado = df[filtro].copy()
 
-    # 3. Verificar si se encontraron registros
+    
     if df_filtrado.empty:
         return None, None
 
-    # 4. Limitar la cantidad de registros según lo solicitado por el usuario
+    
     if limite_registros > 0:
         df_filtrado = df_filtrado.head(limite_registros)
 
-    # 5. Obtener la topología/topografía (primer valor encontrado)
 
-
-    # 6. Calcular la mediana de las variables edáficas (pH, P, K) sobre el grupo de N registros
+    # calcular mediana
     val_ph = pd.to_numeric(
         df_filtrado.get("pH agua:suelo 2,5:1,0"), errors="coerce"
     )
@@ -54,7 +52,7 @@ def consultar_variables_edaficas(
     mediana_p = val_p.median() if not val_p.isna().all() else None
     mediana_k = val_k.median() if not val_k.isna().all() else None
 
-    # 7. Retornar las medianas consolidadas
+
     resumen_medianas = {
         "Departamento": departamento,
         "Municipio": municipio,

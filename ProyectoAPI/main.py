@@ -1,4 +1,3 @@
-# main.py
 from api.obtencion_datos import consultar_variables_edaficas
 from ui.interfaz import mostrar_resultados, solicitar_datos_entrada
 

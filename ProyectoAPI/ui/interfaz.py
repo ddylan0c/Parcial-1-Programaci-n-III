@@ -16,25 +16,25 @@ def solicitar_datos_entrada():
         "\n(Asegúrese de ingresar los datos correctamente, con acentos y sin errores tipográficos.)\n"
     )
 
-    # 1. Solicitar Departamento
+
     departamento = input("\nIngrese el Departamento: ").strip()
     while not departamento:
         print(" Error: El departamento no puede estar vacío.")
         departamento = input("Ingrese el Departamento: ").strip()
 
-    # 2. Solicitar Municipio
+  
     municipio = input("Ingrese el Municipio: ").strip()
     while not municipio:
         print(" Error: El municipio no puede estar vacío.")
         municipio = input("Ingrese el Municipio: ").strip()
 
-    # 3. Solicitar Cultivo
+  
     cultivo = input("Ingrese el Cultivo: ").strip()
     while not cultivo:
         print(" Error: El cultivo no puede estar vacío.")
         cultivo = input("Ingrese el Cultivo: ").strip()
 
-    # 4. Solicitar Número de Registros a consultar
+
     registros = None
     while registros is None:
         try:
@@ -103,7 +103,7 @@ def mostrar_resultados(df_registros, resumen_medianas):
         )
     )
 
-    # --- TABLA 2: MEDIANAS CALCULADAS ---
+    # imprimir medianas
     print("\n MEDIANAS CALCULADAS DE LAS VARIABLES EDÁFICAS:")
 
     tabla_medianas = [[
